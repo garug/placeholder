@@ -1,5 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { UserService } from '../user.service';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-login',
@@ -7,10 +11,34 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
 
-    constructor(private router: Router) {
+    loginForm = new FormGroup({
+        username: new FormControl('', Validators.required),
+        password: new FormControl('', Validators.required),
+    });
+
+    authError = false;
+
+    constructor(
+        private credentials: UserService,
+        private http: HttpClient,
+        private router: Router,
+        private message: ToastrService
+    ) {
 
     }
     login() {
-        this.router.navigate(['/jobs']);
+        if (this.loginForm.valid) {
+            this.credentials.setAuthorization(this.loginForm.value);
+            this.http.get<any>('users/login').subscribe(
+                response => {
+                    this.router.navigate(['/jobs']);
+                    const roles = response.authorities.map(a => a.authority);
+                    this.credentials.setRoles(roles);
+                },
+                error => {
+                    this.authError = true;
+                }
+            );
+        }
     }
 }

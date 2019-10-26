@@ -14,7 +14,7 @@ const routes: Routes = [
     component: JobsComponent
   },
   {
-    path: 'jobs/novo',
+    path: 'jobs/new',
     component: JobsNewComponent
   }
 ];

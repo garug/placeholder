@@ -1,11 +1,14 @@
-<form>
+<ngb-alert *ngIf="authError" type="danger" (close)="authError = false">
+    <strong>Error!</strong> Username and password are corrects?
+</ngb-alert>
+<form [formGroup]="loginForm" (ngSubmit)="login()">
     <div class="form-group">
-        <input class="form-control form-control-lg" type="text" placeholder="Usuário">
+        <input formControlName="username" class="form-control form-control-lg" type="text" placeholder="Username">
     </div>
     <div class="form-group">
-        <input class="form-control form-control-lg" type="password" placeholder="Senha">
+        <input formControlName="password" class="form-control form-control-lg" type="password" placeholder="Password">
     </div>
     <div class="form-group text-right">
-        <button type="button" (click)="login()" class="btn btn-dark">Entrar</button>
+        <button type="submit" class="btn btn-dark">Login</button>
     </div>
 </form>

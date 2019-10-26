@@ -1,44 +1,47 @@
 -- Data Definition Language (DDL)
-CREATE TABLE Job (
+DROP TABLE IF EXISTS Jobs;
+CREATE TABLE Jobs (
     ID INT IDENTITY NOT NULL,
     Name VARCHAR(1000) NOT NULL,
     Active BIT NOT NULL,
     IDParentJob INT,
     CONSTRAINT PK_Job PRIMARY KEY (Id),
-    CONSTRAINT FK_Job_Job FOREIGN KEY (IDParentJob) REFERENCES Job(ID)
+    CONSTRAINT FK_Job_Job FOREIGN KEY (IDParentJob) REFERENCES Jobs(ID)
 );
 
-CREATE TABLE Task (
+DROP TABLE IF EXISTS Tasks;
+CREATE TABLE IF NOT EXISTS Tasks (
     ID INT IDENTITY NOT NULL,
     Name VARCHAR(1000) NOT NULL,
     Weight INT NOT NULL,
     CONSTRAINT PK_Task PRIMARY KEY(ID)
 );
 
-CREATE TABLE Tasks_of_Job (
+DROP TABLE IF EXISTS Tasks_of_Job;
+CREATE TABLE IF NOT EXISTS Tasks_of_Job (
     Created DATE NOT NULL,
     Completed DATE,
     IDJob INT NOT NULL,
     IDTask INT NOT NULL,
     CONSTRAINT PK_Task_Job PRIMARY KEY (IDJob, IDTask),
-    CONSTRAINT FK_Job_Task FOREIGN KEY (IDJob) REFERENCES Job(ID),
-    CONSTRAINT FK_Task_Job FOREIGN KEY (IDTask) REFERENCES Task(ID)
+    CONSTRAINT FK_Job_Task FOREIGN KEY (IDJob) REFERENCES Jobs(ID),
+    CONSTRAINT FK_Task_Job FOREIGN KEY (IDTask) REFERENCES Tasks(ID)
 );
 
 -- Data Manipulation Language (DML)
-INSERT INTO Job
+INSERT INTO Jobs
     (ID, Name, Active, IDParentJob)
 VALUES
     (1, 'New job', true, null),
     (2, 'Another Job', true, null),
     (3, 'Just another job', false, 2);
 
-INSERT INTO Task
+INSERT INTO Tasks
     (id, name, weight)
 VALUES
     (1, 'New Task', 1),
-    (2, 'Another Job', 5),
-    (3, 'Just another job', 8);
+    (2, 'Another Task', 5),
+    (3, 'Just another Task', 8);
 
 INSERT INTO Tasks_of_Job
     (idJob, idTask, Created, Completed)

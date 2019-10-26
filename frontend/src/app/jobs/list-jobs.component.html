@@ -1,25 +1,28 @@
 <div class="form-group text-right">
-    <button type="button" (click)="novo()" class="btn btn-dark">Cadastrar Novo Job</button>
+    <button type="button" (click)="newJob()" class="btn btn-dark">New Job</button>
 </div>
 <table class="table" *ngIf="items.length > 0; else noContent">
     <thead>
         <tr>
             <th scope="col">#</th>
-            <th scope="col">Nome</th>
-            <th scope="col">Situação</th>
-            <th scope="col">Ações</th>
+            <th scope="col">Name</th>
+            <th scope="col">Status</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let job of items">
             <td>{{job.id}}</td>
             <td>{{job.name}}</td>
-            <td><span class="badge badge-dark">{{job.active ? 'Ativo' : 'Inativo'}}</span></td>
+            <td><span class="badge badge-dark">{{job.active ? 'Active' : 'Inactive'}}</span></td>
             <td>
                 <div class="btn-group">
                     <button type="button" (click)="login()" class="btn btn-dark"><i class="fas fa-eye"></i></button>
-                    <button type="button" (click)="login()" class="btn btn-dark"><i class="fas fa-edit"></i></button>
-                    <button type="button" (click)="login()" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                    <ng-container *ngIf="isAuthorized('ROLE_ADMIN')">
+                        <button type="button" (click)="login()" class="btn btn-dark"><i class="fas fa-edit"></i></button>
+                        <button type="button" (click)="login()" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                    </ng-container>
+                    
                 </div>
             </td>
         </tr>
@@ -28,6 +31,6 @@
 
 <ng-template #noContent>
     <div class="alert alert-dark" role="alert">
-        Nada a ser exibido.
+        Nothing to show
     </div>
 </ng-template>
