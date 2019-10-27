@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from '../user.service';
+import { JobService } from './job.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-list-jobs',
@@ -11,24 +13,28 @@ export class JobsComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private credentials: UserService
+        private credentials: UserService,
+        private jobService: JobService,
+        private message: ToastrService
     ) { }
 
     ngOnInit() {
-        this.items = [
-            {
-                id: 1,
-                name: "Job1",
-                active: true
-            }
-        ];
+        this.jobService.getAll().subscribe(r => this.items = r);
     }
 
     isAuthorized(role) {
-        return this.credentials.roles.some(e => e === role);
+        return this.credentials.isAuthorized(role);
     }
 
     newJob() {
         this.router.navigate(['jobs/new']);
+    }
+
+    delete(job) {
+        this.jobService.delete(job).subscribe(r => {
+            this.message.success('Deleted Successfully');
+            const i = this.items.indexOf(job);
+            this.items.splice(i, 1);
+        });
     }
 }

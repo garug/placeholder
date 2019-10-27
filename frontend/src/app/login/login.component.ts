@@ -29,16 +29,9 @@ export class LoginComponent {
     login() {
         if (this.loginForm.valid) {
             this.credentials.setAuthorization(this.loginForm.value);
-            this.http.get<any>('users/login').subscribe(
-                response => {
-                    this.router.navigate(['/jobs']);
-                    const roles = response.authorities.map(a => a.authority);
-                    this.credentials.setRoles(roles);
-                },
-                error => {
-                    this.authError = true;
-                }
-            );
+            this.credentials.login().subscribe(
+                response => this.router.navigate(['/jobs']),
+                error => this.authError = true);
         }
     }
 }

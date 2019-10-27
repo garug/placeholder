@@ -1,8 +1,6 @@
 package br.com.garug.placeholder.placeholder.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 
@@ -33,14 +31,8 @@ public class Job {
     @JsonIgnoreProperties({"parentJob", "children", "tasks"})
     private List<Job> children;
 
-    @ManyToMany
-    @JoinTable(
-            name = "Tasks_of_Job",
-            joinColumns = {@JoinColumn(name = "IDJob")},
-            inverseJoinColumns = {@JoinColumn(name =" IDTask")}
-    )
-    @JsonManagedReference
-    private List<Task> tasks;
+    @OneToMany(mappedBy = "job", cascade = CascadeType.ALL)
+    private List<TaskJob> tasks;
 
     public Long getId() {
         return id;
@@ -82,11 +74,11 @@ public class Job {
         this.children = children;
     }
 
-    public List<Task> getTasks() {
+    public List<TaskJob> getTasks() {
         return tasks;
     }
 
-    public void setTasks(List<Task> tasks) {
+    public void setTasks(List<TaskJob> tasks) {
         this.tasks = tasks;
     }
 }

@@ -2,15 +2,13 @@ package br.com.garug.placeholder.placeholder.presentation;
 
 import br.com.garug.placeholder.placeholder.business.JobService;
 import br.com.garug.placeholder.placeholder.entity.Job;
+import br.com.garug.placeholder.placeholder.entity.dto.JobDTO;
 import br.com.garug.placeholder.placeholder.integration.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.security.Principal;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping(value = "jobs")
@@ -25,5 +23,26 @@ public class JobController {
     @GetMapping
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(this.repository.findAll());
+    }
+
+    @PostMapping
+    public ResponseEntity<?> addNew(@RequestBody JobDTO job) {
+        return ResponseEntity.ok(service.save(job));
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<?> getOne(@PathVariable Long id) {
+        return ResponseEntity.ok(repository.findById(id));
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody JobDTO job) {
+        return ResponseEntity.ok(service.save(job, id));
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<?> remove(@PathVariable Long id) {
+        this.repository.deleteById(id);
+        return ResponseEntity.ok().build();
     }
 }

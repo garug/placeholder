@@ -12,6 +12,6 @@ export class AppComponent implements OnInit {
   constructor(private credentials: UserService) { }
 
   ngOnInit() {
-    this.credentials.roles
+    this.credentials.login().subscribe(() => console.log('Cache login'));
   }
 }

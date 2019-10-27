@@ -7,10 +7,10 @@
             <input formControlName="name" class="form-control form-control" type="text" placeholder="Name">
         </div>
         <div class="col-8 form-group">
-            <select formControlName="parentJob" class="form-control">
-                <option value="" selected disabled>Select a parent job</option>
-                <option value="">None</option>
-                <option *ngFor="let job of jobs$ | async">{{job.name}}</option>
+            <select formControlName="parentJob" [compareWith]="compareJob" class="form-control">
+                <option value="null" disabled selected hidden>Select a parent job</option>
+                <option [ngValue]="{}">None</option>
+                <option [ngValue]="job" *ngFor="let job of jobs">{{job.name}}</option>
             </select>
         </div>
         <div class="col-4">
@@ -22,12 +22,12 @@
             </div>
         </div>
         <div class="col-12">
-            <ng-container *ngIf="tasks.length > 0; else noContent">
+            <ng-container *ngIf="haveSelected(); else noContent">
                 <h6>Tasks for this job:</h6>
-                <ul class="px-0">
-                    <li class="badge badge-primary mx-1">Task</li>
-                    <li class="badge badge-primary mx-1">Task</li>
-                    <li class="badge badge-primary mx-1">Task</li>
+                <ul class="px-0 mb-2">
+                    <ng-container *ngFor="let task of tasks">
+                        <li *ngIf="task.previousSelected" class="badge badge-primary mx-1">{{task.name}}:{{task.weight}}</li>
+                    </ng-container>
                 </ul>
             </ng-container>
             <ng-template #noContent>
@@ -61,9 +61,9 @@
             </thead>
             <tbody>
                 <tr
-                    *ngFor="let task of (tasks$ | async | slice: (taskPage-1) * pageSize : (taskPage-1) * pageSize + pageSize) as tasks"
+                    *ngFor="let task of (tasks | slice: (taskPage-1) * pageSize : (taskPage-1) * pageSize + pageSize) as tasks"
                     [ngClass]="{'table-secondary': task.selected}"
-                    (click)="toggleTask(task); task.selected = !task.selected"
+                    (click)="toggleTask(task)"
                 >
                     <td>{{task.id}}</td>
                     <td>{{task.name}}</td>
@@ -71,9 +71,9 @@
                 </tr>
             </tbody>
         </table>
-        <div class="d-flex justify-content-center" *ngIf="(tasks$ | async)?.length > pageSize">
+        <div class="d-flex justify-content-center" *ngIf="tasks?.length > pageSize">
             <ngb-pagination class="pagination-sm" [(page)]="taskPage" [pageSize]="pageSize"
-                [collectionSize]="(tasks$ | async)?.length"></ngb-pagination>
+                [collectionSize]="tasks?.length"></ngb-pagination>
         </div>
         <form [formGroup]="taskForm" (ngSubmit)="newTask()">
             <h6>Or add a new task...</h6>
@@ -91,7 +91,7 @@
         </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Cancel</button>
-        <button type="button" class="btn btn-dark" (click)="modal.close('Save click')">Confirm</button>
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('cancel')">Cancel</button>
+        <button type="button" class="btn btn-dark" (click)="modal.close('save')">Confirm</button>
     </div>
 </ng-template>

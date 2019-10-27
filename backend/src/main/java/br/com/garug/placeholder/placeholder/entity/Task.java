@@ -1,7 +1,6 @@
 package br.com.garug.placeholder.placeholder.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -21,8 +20,8 @@ public class Task {
     private Integer weight;
 
     @ManyToMany(mappedBy = "tasks", fetch = FetchType.LAZY)
-    @JsonBackReference
-    private List<Job> inJobs;
+    @JsonIgnore
+    private List<Job> jobs;
 
     public Long getId() {
         return id;
@@ -48,11 +47,11 @@ public class Task {
         this.weight = weight;
     }
 
-    public List<Job> getInJobs() {
-        return inJobs;
+    public List<Job> getJobs() {
+        return jobs;
     }
 
-    public void setInJobs(List<Job> inJobs) {
-        this.inJobs = inJobs;
+    public void setJobs(List<Job> jobs) {
+        this.jobs = jobs;
     }
 }

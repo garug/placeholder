@@ -1,14 +1,11 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { TaskService } from '../tasks/task.service';
 import { JobService } from './job.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Location } from '@angular/common';
-import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { forkJoin } from 'rxjs';
-import { map, take } from 'rxjs/operators';
-
 
 @Component({
     selector: 'app-new-jobs',
@@ -16,26 +13,24 @@ import { map, take } from 'rxjs/operators';
 })
 export class JobsNewComponent implements OnInit {
 
-    // subjects
-    jobs$: Observable<any[]>;
-    tasks$: Observable<any[]>;
+    activeJob: any;
 
-    // Tasks in window
+    // lists
+    jobs: Array<any> = [];
     tasks: Array<any> = [];
     tempTasks: Array<any> = [];
 
     // params to pagination
     taskPage = 1;
-    pageSize = 10;
+    pageSize = 5;
 
     closeResult: string;
-
 
     // Form to submit a job
     jobForm = new FormGroup({
         name: new FormControl('', Validators.required),
         parentJob: new FormControl(''),
-        active: new FormControl('')
+        active: new FormControl(true)
     });
 
     // form to submit a task
@@ -45,17 +40,32 @@ export class JobsNewComponent implements OnInit {
     });
 
     constructor(
+        private router: Router,
         private location: Location,
+        private message: ToastrService,
         private modalService: NgbModal,
         private jobService: JobService,
-        private taskService: TaskService
+        private taskService: TaskService,
+        private activatedRoute: ActivatedRoute
     ) {
-
+        this.jobService.getAll().subscribe(r => this.jobs = r);
+        this.taskService.getAll().subscribe(r => this.tasks = r);
     }
 
     ngOnInit() {
-        this.jobs$ = this.jobService.getAll();
-        this.tasks$ = this.taskService.getAll();
+        this.activatedRoute.paramMap.subscribe(params => {
+            if (params.has('id')) {
+                this.jobService.getById(params.get('id')).subscribe(response => {
+                    if (!response) {
+                        this.router.navigate(['jobs']);
+                        this.message.warning('Job not found');
+                    } else {
+                        this.activeJob = response;
+                        this.jobForm.patchValue(response);
+                    }
+                });
+            }
+        });
     }
 
     goBack() {
@@ -68,35 +78,71 @@ export class JobsNewComponent implements OnInit {
         } else {
             this.tempTasks.splice(task, 1);
         }
-        console.log(this.tempTasks);
+        task.selected = !task.selected;
     }
 
     newTask() {
         if (this.taskForm.valid) {
             this.taskService.add(this.taskForm.value)
-                .subscribe(r => console.log(r));
+                .subscribe(r => {
+                    this.taskForm.reset();
+                    this.tasks.push(r);
+                    this.toggleTask(r);
+                    this.tasks = this.tasks.sort((e1, e2) => e1.id - e2.id);
+                });
         }
+    }
+
+    haveSelected() {
+        return this.tasks.some(e => e.previousSelected);
     }
 
     save() {
+        if (this.jobForm.valid) {
+            // Define tasks
+            const tasks = this.tasks.filter(e => e.previousSelected);
 
+            if (this.activeJob) {
+                const { id } = this.activeJob;
+                this.jobService.update({ id, ...this.jobForm.value, tasks })
+                    .subscribe(() => this.afterSaved());
+            } else {
+                this.jobService.add({ ...this.jobForm.value, tasks })
+                    .subscribe(() => this.afterSaved());
+            }
+        }
+    }
+
+    afterSaved() {
+        this.router.navigate(['jobs']);
+        this.message.success('Saved Successfully');
     }
 
     open(content) {
-        this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-            this.closeResult = `Closed with: ${result}`;
-        }, (reason) => {
-            this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-        });
+        this.tasks.forEach(e => e.selected = e.previousSelected);
+        this.modalService
+            .open(content, { ariaLabelledBy: 'modal-basic-title' })
+            .result.then(
+                (result) => {
+                    this.taskForm.reset();
+                    this.taskPage = 1;
+                    if (result === 'save') {
+                        this.applyTasks();
+                    }
+                }
+            );
     }
 
-    private getDismissReason(reason: any): string {
-        if (reason === ModalDismissReasons.ESC) {
-            return 'by pressing ESC';
-        } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-            return 'by clicking on a backdrop';
-        } else {
-            return `with: ${reason}`;
-        }
+    applyTasks() {
+        this.tempTasks.forEach(e => {
+            const task = this.tasks.find(t => t.id === e.id);
+            task.previousSelected = e.selected;
+            e.selected = false;
+        });
+        this.tempTasks = [];
+    }
+
+    compareJob(c1, c2) {
+        return c1 && c2 ? c1.id === c2.id : c1 === c2;
     }
 }
