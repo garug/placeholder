@@ -14,13 +14,15 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JobService } from './jobs/job.service';
+import { DetailJobComponent } from './jobs/detail-jobs.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     JobsComponent,
-    JobsNewComponent
+    JobsNewComponent,
+    DetailJobComponent
   ],
   imports: [
     BrowserModule,

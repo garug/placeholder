@@ -1,0 +1,42 @@
+<div class="form-group text-left">
+    <button type="button" (click)="goBack()" class="btn btn-dark">Go Back</button>
+</div>
+
+<div class="row">
+    <table class="table col-12">
+        <tr>
+            <th>Name:</th>
+            <td>{{activeJob.name}}</td>
+        </tr>
+        <tr>
+            <th>Active:</th>
+            <td>{{activeJob.active}}</td>
+        </tr>
+        <tr>
+            <th>Parent Job:</th>
+            <td>{{activeJob.parentJob ? activeJob.parentJob.name : 'None'}}</td>
+        </tr>
+    </table>
+
+    <div class="col-12" *ngIf="activeJob.children">
+        <h6>This job is parent of these other jobs...</h6>
+        <ul>
+            <li *ngFor="let child of activeJob.children">{{child.name}}</li>
+        </ul>
+        <hr>
+    </div>
+
+    <div class="col-12">
+        <ng-container *ngIf="activeJob.tasks; else noContent">
+            <h6>Tasks for this job:</h6>
+            <ul class="px-0 mb-2">
+                <li *ngFor="let task of activeJob.tasks" class="badge badge-primary mx-1">
+                    {{task.task.name}}:{{task.task.weight}}
+                </li>
+            </ul>
+        </ng-container>
+        <ng-template #noContent>
+            <h6 class="mb-3">Not have tasks associated with this job</h6>
+        </ng-template>
+    </div>
+</div>
