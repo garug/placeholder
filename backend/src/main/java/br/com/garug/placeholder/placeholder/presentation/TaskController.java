@@ -24,6 +24,11 @@ public class TaskController {
         return ResponseEntity.ok(repository.findAll());
     }
 
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<?> getOne(@PathVariable Long id) {
+        return ResponseEntity.ok(service.entityToDTO(service.findById(id)));
+    }
+
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Task> addNew(@RequestBody Task task) {
         return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(task));
@@ -37,7 +42,7 @@ public class TaskController {
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> remove(@PathVariable Long id) {
-        repository.deleteById(id);
+        service.deleteById(id);
         return ResponseEntity.ok().build();
     }
 

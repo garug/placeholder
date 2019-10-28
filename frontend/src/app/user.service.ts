@@ -10,6 +10,7 @@ export class UserService {
   username: string;
   password: string;
   roles: Array<string>;
+  authenticated: boolean;
 
   constructor(private http: HttpClient) {
     let credentials: any = localStorage.getItem('credentials');
@@ -43,9 +44,15 @@ export class UserService {
     return this.http.get<any>('users/login')
       .pipe(
         map(response => {
+          this.authenticated = true;
           const roles = response.authorities.map(a => a.authority);
           this.setRoles(roles);
         })
       );
+  }
+
+  public logout() {
+    this.authenticated = false;
+    localStorage.removeItem('credentials');
   }
 }

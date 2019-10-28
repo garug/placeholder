@@ -15,6 +15,9 @@ import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { JobService } from './jobs/job.service';
 import { DetailJobComponent } from './jobs/detail-jobs.component';
+import { TasksComponent } from './tasks/list-tasks.component';
+import { FormTaskComponent } from './tasks/form-tasks.component';
+import { DetailTaskComponent } from './tasks/detail-tasks.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +25,10 @@ import { DetailJobComponent } from './jobs/detail-jobs.component';
     LoginComponent,
     JobsComponent,
     JobsNewComponent,
-    DetailJobComponent
+    DetailJobComponent,
+    TasksComponent,
+    FormTaskComponent,
+    DetailTaskComponent
   ],
   imports: [
     BrowserModule,

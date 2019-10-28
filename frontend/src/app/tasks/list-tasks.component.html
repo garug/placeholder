@@ -1,0 +1,47 @@
+<ngb-alert type="info" [dismissible]="false">
+    <strong>Info:</strong> New tasks are included directly inside a job
+</ngb-alert>
+<ng-container *ngIf="items.length > 0; else noContent">
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Weight</th>
+                <th scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let task of (items | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize) as items">
+                <td>{{task.id}}</td>
+                <td>{{task.name}}</td>
+                <td>{{task.weight}}</td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" [routerLink]="['/tasks',task.id]" class="btn btn-dark"><i
+                                class="fas fa-eye"></i></button>
+                        <ng-container *ngIf="isAuthorized('ROLE_ADMIN')">
+                            <button type="button" [routerLink]="['/tasks',task.id, 'edit']" class="btn btn-dark"><i
+                                    class="fas fa-edit"></i></button>
+                            <button type="button" (click)="delete(task)" class="btn btn-danger"><i
+                                    class="fas fa-trash"></i></button>
+                        </ng-container>
+
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-center" *ngIf="items?.length > pageSize">
+        <ngb-pagination class="pagination-sm" [(page)]="page" [pageSize]="pageSize" [collectionSize]="items?.length">
+        </ngb-pagination>
+    </div>
+</ng-container>
+
+<ng-template #noContent>
+    <div class="alert alert-dark" role="alert">
+        Nothing to show
+    </div>
+</ng-template>

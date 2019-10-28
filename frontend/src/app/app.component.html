@@ -1,10 +1,20 @@
-<div class="container w-50 card mt-5">
-    <div class="text-center mb-2 mt-5">
-        <img src="assets/logo.png" class="img-fluid w-50"/>
-        <p>made by <a href="http://garug.com.br" target="_blank">garug</a></p>
-    </div>
-    <div class="card-body">
-      <router-outlet></router-outlet>
-    </div>
+<div style="max-width: 600px" class="container card mt-5">
+  <nav *ngIf="credentials.authenticated" class="navbar navbar-expand-lg navbar-dark bg-dark mt-2">
+    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/jobs" routerLinkActive="active">Manage Jobs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/tasks" routerLinkActive="active">Manage Tasks</a>
+      </li>
+    </ul>
+    <button class="btn btn-sm btn-danger" (click)="logout()">Logout</button>
+  </nav>
+  <div class="text-center mb-2 mt-5">
+    <img src="assets/logo.png" class="img-fluid w-50" />
+    <p>made by <a href="http://garug.com.br" target="_blank">garug</a></p>
+  </div>
+  <div class="card-body">
+    <router-outlet></router-outlet>
+  </div>
 </div>
-
