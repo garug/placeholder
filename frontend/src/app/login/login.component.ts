@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, AfterContentInit, AfterViewInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { UserService } from '../user.service';
@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
     selector: 'app-login',
     templateUrl: './login.component.html'
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
     loginForm = new FormGroup({
         username: new FormControl('', Validators.required),
@@ -26,6 +26,7 @@ export class LoginComponent {
     ) {
 
     }
+
     login() {
         if (this.loginForm.valid) {
             this.credentials.setAuthorization(this.loginForm.value);

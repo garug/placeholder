@@ -20,6 +20,12 @@ public class TaskService {
     public Task save(TaskDTO dto) {
         Task task = new Task();
         BeanUtils.copyProperties(dto, task);
+        return this.save(task);
+    }
+
+    public Task save(Task task) {
+        if (task.getId() == null && repository.findByName(task.getName()) != null)
+            throw new BusinessException("Already have a task with name \"" + task.getName() + "\"");
         return repository.save(task);
     }
 

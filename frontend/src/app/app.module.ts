@@ -18,6 +18,8 @@ import { DetailJobComponent } from './jobs/detail-jobs.component';
 import { TasksComponent } from './tasks/list-tasks.component';
 import { FormTaskComponent } from './tasks/form-tasks.component';
 import { DetailTaskComponent } from './tasks/detail-tasks.component';
+import { AuthGuard } from './AuthGuard.service';
+import { AdminGuard } from './AdminGuard.service';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,11 @@ import { DetailTaskComponent } from './tasks/detail-tasks.component';
     BrowserAnimationsModule,
     ToastrModule.forRoot()
   ],
-  providers: [JobService, TaskService,
+  providers: [
+    JobService,
+    TaskService,
+    AuthGuard,
+    AdminGuard,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpRequestInterceptor,

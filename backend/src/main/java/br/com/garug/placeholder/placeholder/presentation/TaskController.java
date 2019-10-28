@@ -31,7 +31,7 @@ public class TaskController {
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<Task> addNew(@RequestBody Task task) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(task));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.save(task));
     }
 
     @PutMapping(value = "/{id}")

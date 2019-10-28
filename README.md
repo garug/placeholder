@@ -2,7 +2,7 @@
 
 Projeto para teste de conhecimentos técnicos.
 
-Documento de requisitos pode ser encontrado [aqui](https://choosealicense.com/licenses/mit/).
+Documento de requisitos pode ser encontrado [aqui](https://drive.google.com/open?id=1UQaowhIzc-cTorovUVe_9P81s0fhgi5Z).
 
 ## Instalação
 

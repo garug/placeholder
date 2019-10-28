@@ -14,7 +14,7 @@
             </tr>
         </table>
     
-        <div class="col-12" *ngIf="activeTask.jobs">
+        <div class="col-12" *ngIf="activeTask?.jobs?.length > 0">
             <h6>This task appears in these jobs...</h6>
             <ul>
                 <li *ngFor="let item of activeTask.jobs">{{item.name}}</li>

@@ -7,6 +7,8 @@ import { DetailJobComponent } from './jobs/detail-jobs.component';
 import { TasksComponent } from './tasks/list-tasks.component';
 import { FormTaskComponent } from './tasks/form-tasks.component';
 import { DetailTaskComponent } from './tasks/detail-tasks.component';
+import { AuthGuard } from './AuthGuard.service';
+import { AdminGuard } from './AdminGuard.service';
 
 const routes: Routes = [
   {
@@ -15,31 +17,38 @@ const routes: Routes = [
   },
   {
     path: 'jobs',
-    component: JobsComponent
+    component: JobsComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'jobs/new',
-    component: JobsNewComponent
+    component: JobsNewComponent,
+    canActivate: [AuthGuard, AdminGuard]
   },
   {
     path: 'jobs/:id',
-    component: DetailJobComponent
+    component: DetailJobComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'jobs/:id/edit',
-    component: JobsNewComponent
+    component: JobsNewComponent,
+    canActivate: [AuthGuard, AdminGuard]
   },
   {
     path: 'tasks',
-    component: TasksComponent
+    component: TasksComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'tasks/:id',
-    component: DetailTaskComponent
+    component: DetailTaskComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'tasks/:id/edit',
-    component: FormTaskComponent
+    component: FormTaskComponent,
+    canActivate: [AuthGuard, AdminGuard]
   },
 ];
 

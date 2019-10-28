@@ -26,6 +26,9 @@ public class JobService {
 
     @Transactional
     public Job save(JobDTO dto) {
+        if (dto.getId() == null && repository.findByName(dto.getName()) != null)
+            throw new BusinessException("Already have a job with name \"" + dto.getName() +"\"");
+
         Job job = this.dtoToEntity(dto);
         job = this.safeForSave(job);
         return repository.saveAndFlush(job);
