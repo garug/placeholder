@@ -32,17 +32,18 @@ public class JobController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> getOne(@PathVariable Long id) {
-        return ResponseEntity.ok(repository.findById(id));
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @PutMapping(value = "/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody JobDTO job) {
-        return ResponseEntity.ok(service.save(job, id));
+        job.setId(id);
+        return ResponseEntity.ok(service.save(job));
     }
 
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> remove(@PathVariable Long id) {
-        this.repository.deleteById(id);
+        this.service.deleteById(id);
         return ResponseEntity.ok().build();
     }
 }

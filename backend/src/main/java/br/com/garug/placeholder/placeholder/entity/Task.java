@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "Tasks")
@@ -19,9 +20,9 @@ public class Task {
     @Column
     private Integer weight;
 
-    @ManyToMany(mappedBy = "tasks", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "task")
     @JsonIgnore
-    private List<Job> jobs;
+    private List<TaskJob> jobs;
 
     public Long getId() {
         return id;
@@ -47,11 +48,24 @@ public class Task {
         this.weight = weight;
     }
 
-    public List<Job> getJobs() {
+    public List<TaskJob> getJobs() {
         return jobs;
     }
 
-    public void setJobs(List<Job> jobs) {
+    public void setJobs(List<TaskJob> jobs) {
         this.jobs = jobs;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return name.equals(task.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

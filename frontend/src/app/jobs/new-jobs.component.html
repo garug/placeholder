@@ -4,13 +4,14 @@
 <form [formGroup]="jobForm" (ngSubmit)="save()">
     <div class="row">
         <div class="col-12 form-group">
-            <input formControlName="name" class="form-control form-control" type="text" placeholder="Name">
+            <input [ngClass]="jobForm.controls.name.invalid && jobForm.controls.name.touched ? 'is-invalid' : ''" formControlName="name" class="form-control form-control" type="text" placeholder="Name">
         </div>
         <div class="col-8 form-group">
             <select formControlName="parentJob" [compareWith]="compareJob" class="form-control">
-                <option value="null" disabled selected hidden>Select a parent job</option>
-                <option [ngValue]="{}">None</option>
-                <option [ngValue]="job" *ngFor="let job of jobs">{{job.name}}</option>
+                <option [ngValue]="{}">Select a parent job</option>
+                <ng-container *ngFor="let job of jobs">
+                    <option [ngValue]="job" *ngIf="job.id !== activeJob?.id">{{job.name}}</option>
+                </ng-container>
             </select>
         </div>
         <div class="col-4">
@@ -79,10 +80,10 @@
             <h6>Or add a new task...</h6>
             <div class="row mx-sm-n1">
                 <div class="form-group col-6 px-sm-1">
-                    <input formControlName="name" type="text" class="form-control" placeholder="Name">
+                    <input [ngClass]="taskForm.controls.name.invalid && taskForm.controls.name.touched ? 'is-invalid' : ''" formControlName="name" type="text" class="form-control" placeholder="Name">
                 </div>
                 <div class="form-group col-3 px-sm-1">
-                    <input formControlName="weight" type="text" class="form-control" placeholder="Weight">
+                    <input [ngClass]="taskForm.controls.weight.invalid && taskForm.controls.weight.touched ? 'is-invalid' : ''" formControlName="weight" type="text" class="form-control" placeholder="Weight">
                 </div>
                 <div class="col-3 px-sm-1">
                     <button class="w-100 btn btn-outline-success" type="submit">Add Task</button>

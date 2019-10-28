@@ -1,10 +1,12 @@
 package br.com.garug.placeholder.placeholder.entity;
 
-import com.fasterxml.jackson.annotation.*;
+
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-
 import java.util.List;
+import java.util.Objects;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -27,7 +29,7 @@ public class Job {
     @JsonIgnoreProperties({"parentJob", "children", "tasks"})
     private Job parentJob;
 
-    @OneToMany(mappedBy="parentJob")
+    @OneToMany(mappedBy = "parentJob")
     @JsonIgnoreProperties({"parentJob", "children", "tasks"})
     private List<Job> children;
 
@@ -80,5 +82,18 @@ public class Job {
 
     public void setTasks(List<TaskJob> tasks) {
         this.tasks = tasks;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Job job = (Job) o;
+        return name.equals(job.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

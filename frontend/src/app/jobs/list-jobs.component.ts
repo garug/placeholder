@@ -11,6 +11,10 @@ import { ToastrService } from 'ngx-toastr';
 export class JobsComponent implements OnInit {
     items: Array<any> = [];
 
+    // params to pagination
+    page = 1;
+    pageSize = 5;
+
     constructor(
         private router: Router,
         private credentials: UserService,

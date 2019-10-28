@@ -1,12 +1,15 @@
 package br.com.garug.placeholder.placeholder.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.engine.internal.Cascade;
+import org.hibernate.engine.spi.CascadingAction;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
-@Table(name = "Task_of_Job")
+@Table(name = "Tasks_of_Job")
 public class TaskJob {
 
     @Id
@@ -66,5 +69,19 @@ public class TaskJob {
 
     public void setCompleted(Boolean completed) {
         this.completed = completed;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TaskJob taskJob = (TaskJob) o;
+        return task.equals(taskJob.task) &&
+                job.equals(taskJob.job);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(task, job);
     }
 }

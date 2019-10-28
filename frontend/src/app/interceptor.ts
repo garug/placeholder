@@ -21,7 +21,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     return next.handle(dupReq)
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          this.message.error(error.message);
+          this.message.error(error.error.message);
           return throwError(error);
         })
       );

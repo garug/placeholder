@@ -29,7 +29,7 @@ export class JobsNewComponent implements OnInit {
     // Form to submit a job
     jobForm = new FormGroup({
         name: new FormControl('', Validators.required),
-        parentJob: new FormControl(''),
+        parentJob: new FormControl({}),
         active: new FormControl(true)
     });
 
@@ -48,24 +48,31 @@ export class JobsNewComponent implements OnInit {
         private taskService: TaskService,
         private activatedRoute: ActivatedRoute
     ) {
-        this.jobService.getAll().subscribe(r => this.jobs = r);
-        this.taskService.getAll().subscribe(r => this.tasks = r);
+
     }
 
     ngOnInit() {
-        this.activatedRoute.paramMap.subscribe(params => {
-            if (params.has('id')) {
-                this.jobService.getById(params.get('id')).subscribe(response => {
-                    if (!response) {
-                        this.router.navigate(['jobs']);
-                        this.message.warning('Job not found');
-                    } else {
-                        this.activeJob = response;
-                        this.jobForm.patchValue(response);
-                    }
-                });
-            }
+        this.jobService.getAll().subscribe(r => this.jobs = r);
+        this.taskService.getAll().subscribe(r => {
+            this.tasks = r;
+            this.activatedRoute.paramMap.subscribe(params => {
+                if (params.has('id')) {
+                    this.jobService.getById(params.get('id')).subscribe(response => {
+                        if (!response) {
+                            this.router.navigate(['jobs']);
+                            this.message.warning('Job not found');
+                        } else {
+                            this.activeJob = response;
+                            response.tasks.forEach(task => {
+                                this.tasks.find(e => e.id === task.task.id).previousSelected = true;
+                            });
+                            this.jobForm.patchValue(response);
+                        }
+                    });
+                }
+            });
         });
+
     }
 
     goBack() {
@@ -90,6 +97,8 @@ export class JobsNewComponent implements OnInit {
                     this.toggleTask(r);
                     this.tasks = this.tasks.sort((e1, e2) => e1.id - e2.id);
                 });
+        } else {
+            this.taskForm.markAllAsTouched();
         }
     }
 
@@ -110,6 +119,8 @@ export class JobsNewComponent implements OnInit {
                 this.jobService.add({ ...this.jobForm.value, tasks })
                     .subscribe(() => this.afterSaved());
             }
+        } else {
+            this.jobForm.markAllAsTouched();
         }
     }
 
