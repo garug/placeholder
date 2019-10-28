@@ -5,8 +5,11 @@ import br.com.garug.placeholder.placeholder.entity.Job;
 import br.com.garug.placeholder.placeholder.entity.dto.JobDTO;
 import br.com.garug.placeholder.placeholder.integration.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Role;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +29,7 @@ public class JobController {
     }
 
     @PostMapping
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<?> addNew(@RequestBody JobDTO job) {
         return ResponseEntity.ok(service.save(job));
     }
@@ -36,12 +40,14 @@ public class JobController {
     }
 
     @PutMapping(value = "/{id}")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody JobDTO job) {
         job.setId(id);
         return ResponseEntity.ok(service.save(job));
     }
 
     @DeleteMapping(value = "/{id}")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<?> remove(@PathVariable Long id) {
         this.service.deleteById(id);
         return ResponseEntity.ok().build();

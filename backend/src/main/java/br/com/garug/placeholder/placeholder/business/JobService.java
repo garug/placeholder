@@ -7,6 +7,7 @@ import br.com.garug.placeholder.placeholder.entity.dto.JobDTO;
 import br.com.garug.placeholder.placeholder.integration.JobRepository;
 import br.com.garug.placeholder.placeholder.integration.TaskJobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -18,11 +19,14 @@ import java.util.stream.Collectors;
 @Service
 public class JobService {
 
-    @Autowired
     private JobRepository repository;
+    private TaskJobRepository tjRepository;
 
     @Autowired
-    private TaskJobRepository tjRepository;
+    public JobService(JobRepository repository, TaskJobRepository tjRepository) {
+        this.repository = repository;
+        this.tjRepository = tjRepository;
+    }
 
     @Transactional
     public Job save(JobDTO dto) {
@@ -34,7 +38,7 @@ public class JobService {
         return repository.saveAndFlush(job);
     }
 
-    protected Job dtoToEntity(JobDTO dto) {
+    public Job dtoToEntity(JobDTO dto) {
         Job job = this.initialConvertDTO(dto);
 
         if (dto.getTasks() != null)

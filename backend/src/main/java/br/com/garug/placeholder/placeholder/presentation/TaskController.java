@@ -7,6 +7,8 @@ import br.com.garug.placeholder.placeholder.integration.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,17 +32,20 @@ public class TaskController {
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<Task> addNew(@RequestBody Task task) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.save(task));
     }
 
     @PutMapping(value = "/{id}")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<Task> update(@RequestBody TaskDTO task, @PathVariable Long id) {
         task.setId(id);
         return ResponseEntity.ok(service.save(task));
     }
 
     @DeleteMapping(value = "/{id}")
+    @Secured("ROLE_ADMIN")
     public ResponseEntity<?> remove(@PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.ok().build();

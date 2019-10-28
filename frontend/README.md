@@ -1,27 +1,35 @@
-# Frontend
+# placeholder-frontend
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.9.
+Frontend da aplicação placholder. Utilizando Angular na versão 8.
 
-## Development server
+## Necessário
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Para construção e uso desse projeto, se faz necessário
 
-## Code scaffolding
+- [node.js](https://nodejs.org/en)
+- [Angular 8](https://angular.io)
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Rodando local
 
-## Build
+No diretório /frontend, execute o  comando via cmd ou powershell
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+```shell
+npm install
+ng serve
+```
 
-## Running unit tests
+Os usuários para acesso são os mesmos já utilizados no backend
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```
+Usuário: admin
+Senha: admin
+````
 
-## Running end-to-end tests
+```
+Usuário: teste
+Senha: teste
+```
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+## Licença
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+[MIT](https://choosealicense.com/licenses/mit/)

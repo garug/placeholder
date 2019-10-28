@@ -9,7 +9,7 @@ import { ToastrService } from 'ngx-toastr';
     selector: 'app-login',
     templateUrl: './login.component.html'
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
     loginForm = new FormGroup({
         username: new FormControl('', Validators.required),
