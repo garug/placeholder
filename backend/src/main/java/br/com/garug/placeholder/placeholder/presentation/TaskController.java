@@ -35,9 +35,9 @@ public class TaskController {
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<Task> update(@RequestBody Task task, @PathVariable Long id) {
+    public ResponseEntity<Task> update(@RequestBody TaskDTO task, @PathVariable Long id) {
         task.setId(id);
-        return ResponseEntity.ok(repository.save(task));
+        return ResponseEntity.ok(service.save(task));
     }
 
     @DeleteMapping(value = "/{id}")

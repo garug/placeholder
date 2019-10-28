@@ -39,6 +39,7 @@ public class TaskService {
 
     public TaskDTO entityToDTO(Task task) {
         TaskDTO dto = new TaskDTO();
+        dto.setId(task.getId());
         dto.setName(task.getName());
         dto.setWeight(task.getWeight());
         dto.setJobs(task.getJobs().stream().map(e -> e.getJob()).collect(Collectors.toList()));
